@@ -21,46 +21,7 @@
 
 <div class="wrapper wrapper-content animated fadeInDown">
     <div class="panel panel-primary">
-        <div class="panel-body">
-            <div class="form-horizontal">
-                <div class="form-group">
-                    <label asp-for="Id" class="control-label col-md-2"></label>
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Title" class="control-label col-md-2"></label>
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="PublishingCompany" class="control-label col-md-2"></label>
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.PublishingCompany, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="MinPlayers" class="control-label col-md-2"></label>
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.MinPlayers, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="MaxPlayers" class="control-label col-md-2"></label>
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.MaxPlayers, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Price" class="control-label col-md-2"></label>
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
-                    </div>
-                </div>
-            </div>
-        </div>
+        @Html.Partial("~/Views/BoardGame/_DeleteDetailsPartial.cshtml", Model)
         <div class="panel-footer">
             <a class="btn btn-white" asp-action="Index">Back to List</a>
             @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })

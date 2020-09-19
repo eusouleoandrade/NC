@@ -18,14 +18,14 @@ namespace NC.GameStore.ViewModel
 
         [Required]
         [DisplayName("Min Players")]
-        public int MinPlayers { get; set; }
+        public int? MinPlayers { get; set; }
 
         [Required]
         [DisplayName("Max Players")]
-        public int MaxPlayers { get; set; }
+        public int? MaxPlayers { get; set; }
 
         [Required]
         [DisplayName("Price $")]
-        public Decimal Price { get; set; }
+        public Decimal? Price { get; set; }
     }
 }
