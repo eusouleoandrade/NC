@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NC.GameStore.Mapper\NC.GameStore.Mapper.csproj" />
+    <ProjectReference Include="..\NC.GameStore.Service\NC.GameStore.Service.csproj" />
+    <ProjectReference Include="..\NC.GameStore.ViewModel\NC.GameStore.ViewModel.csproj" />
+    <ProjectReference Include="..\NC.GameStorre.MockRepository\NC.GameStorre.MockRepository.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="wwwroot\image\" />
+  </ItemGroup>
+
+</Project>
