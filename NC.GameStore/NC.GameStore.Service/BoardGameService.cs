@@ -46,7 +46,7 @@ namespace NC.GameStore.Service
 
             var entity = _boardGameRepository.Get(id);
 
-            if(entity is null)
+            if (entity is null)
                 throw new BoardGameServiceException("Game not available.");
 
             return entity;
@@ -55,24 +55,15 @@ namespace NC.GameStore.Service
         private void CreateOrEdit(BoardGame entity, bool isUpdate)
         {
             if (entity is null || !entity.IsValid())
-            {
                 throw new BoardGameServiceException("Game not available.");
-            }
 
             var entityOld = _boardGameRepository.Get(entity.Title);
 
             if (!(entityOld is null) && entity.Id != entityOld.Id)
-            {
                 throw new BoardGameServiceException("It is not possible to register a game with the same title.");
-            }
 
             if (isUpdate)
-            {
-                if(entityOld is null)
-                    throw new BoardGameServiceException("register not found.");
-
                 _boardGameRepository.Update(entity);
-            }  
             else
                 _boardGameRepository.Add(entity);
         }
