@@ -63,7 +63,12 @@ namespace NC.GameStore.Service
                 throw new BoardGameServiceException("It is not possible to register a game with the same title.");
 
             if (isUpdate)
+            {
+                if (_boardGameRepository.Get(entity.Id) is null)
+                    throw new BoardGameServiceException("Register not found.");
+
                 _boardGameRepository.Update(entity);
+            }
             else
                 _boardGameRepository.Add(entity);
         }
