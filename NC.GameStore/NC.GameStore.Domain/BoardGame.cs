@@ -23,7 +23,7 @@ namespace NC.GameStore.Domain
                 && MinPlayers > Decimal.Zero
                 && MaxPlayers > Decimal.Zero
                 && Price > Decimal.Zero
-                && MaxPlayers < MinPlayers;
+                && MaxPlayers >= MinPlayers;
         }
     }
 }
