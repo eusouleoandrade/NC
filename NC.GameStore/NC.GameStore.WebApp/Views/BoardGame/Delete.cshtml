@@ -79,7 +79,7 @@
             </div>
             <div class="modal-body">
                 <p>
-                    Are you sure you want to delete the game: <strong>@Model.Title.ToUpper()</strong>
+                    Are you sure you want to delete the game: <strong>@Model?.Title.ToUpper()</strong>
                 </p>
                 @using (Html.BeginForm("Delete", "BoardGame", FormMethod.Post, new { @id = "delete-form", role = "form" }))
                 {

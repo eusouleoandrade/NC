@@ -67,7 +67,12 @@ namespace NC.GameStore.Service
             }
 
             if (isUpdate)
+            {
+                if(entityOld is null)
+                    throw new BoardGameServiceException("register not found.");
+
                 _boardGameRepository.Update(entity);
+            }  
             else
                 _boardGameRepository.Add(entity);
         }

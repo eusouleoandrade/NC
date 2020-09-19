@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+    <PackageReference Include="coverlet.collector" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NC.GameStore.CommonRepository\NC.GameStore.CommonRepository.csproj" />
+    <ProjectReference Include="..\NC.GameStore.Exception\NC.GameStore.Exception.csproj" />
+    <ProjectReference Include="..\NC.GameStore.Service\NC.GameStore.Service.csproj" />
+    <ProjectReference Include="..\NC.GameStorre.MockRepository\NC.GameStorre.MockRepository.csproj" />
+  </ItemGroup>
+
+</Project>
