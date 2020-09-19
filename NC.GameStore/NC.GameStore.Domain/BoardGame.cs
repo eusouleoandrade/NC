@@ -18,11 +18,12 @@ namespace NC.GameStore.Domain
 
         public bool IsValid()
         {
-            return !String.IsNullOrEmpty(Title) 
+            return !String.IsNullOrEmpty(Title)
                 && !String.IsNullOrEmpty(PublishingCompany)
                 && MinPlayers > Decimal.Zero
                 && MaxPlayers > Decimal.Zero
-                && Price > Decimal.Zero;
+                && Price > Decimal.Zero
+                && MaxPlayers < MinPlayers;
         }
     }
 }

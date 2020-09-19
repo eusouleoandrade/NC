@@ -54,23 +54,30 @@ namespace NC.GameStore.Service
 
         private void CreateOrEdit(BoardGame entity, bool isUpdate)
         {
+            // Checks domain validation
             if (entity is null || !entity.IsValid())
                 throw new BoardGameServiceException("Game not available.");
 
-            var entityOld = _boardGameRepository.Get(entity.Title);
-
-            if (!(entityOld is null) && entity.Id != entityOld.Id)
+            // Checks if the title already exists
+            var entityByName = _boardGameRepository.Get(entity.Title);
+            if (!(entityByName is null) && entity.Id != entityByName.Id)
                 throw new BoardGameServiceException("It is not possible to register a game with the same title.");
 
             if (isUpdate)
             {
+                // Checks if it still exists
                 if (_boardGameRepository.Get(entity.Id) is null)
                     throw new BoardGameServiceException("Register not found.");
 
+                // Updates
                 _boardGameRepository.Update(entity);
             }
             else
+            {
+                // Adds
                 _boardGameRepository.Add(entity);
+            }
+                
         }
     }
 }
