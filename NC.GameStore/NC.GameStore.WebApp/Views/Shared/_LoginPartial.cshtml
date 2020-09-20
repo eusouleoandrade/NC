@@ -1,4 +1,16 @@
 ﻿<ul class="nav navbar-top-links navbar-right">
-    <li>@Html.ActionLink("Register", "", "")</li>
-    <li>@Html.ActionLink("Login", "", "")</li>
+    <li><a href="#" id="btnRegister"><i class="fa fa-user"></i> Register</a></li>
+    <li><a id="btnLogin" href="#"><i class="fa fa-lock"></i> Login</a></li>
 </ul>
+
+<script type="text/javascript">
+    setNotImplemented(document.querySelector("#btnRegister"));
+    setNotImplemented(document.querySelector("#btnLogin"));
+
+    function setNotImplemented(component) {
+        component.addEventListener("click", function (event) {
+            setToastr();
+            toastr.success('Function not implemented.', 'Notification');
+        })
+    }
+</script>
