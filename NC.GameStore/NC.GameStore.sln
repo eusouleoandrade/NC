@@ -39,7 +39,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7 - ViewModels", "7 - ViewM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NC.GameStore.ViewModel", "NC.GameStore.ViewModel\NC.GameStore.ViewModel.csproj", "{CBAE555F-6840-428C-AC22-67FDA7FA7405}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NC.GameStore.Test", "NC.GameStore.Test\NC.GameStore.Test.csproj", "{953931FB-3BD8-48C1-AAA6-E210CD8F726A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NC.GameStore.Test", "NC.GameStore.Test\NC.GameStore.Test.csproj", "{953931FB-3BD8-48C1-AAA6-E210CD8F726A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NC.GameStore.WebApi", "NC.GameStore.WebApi\NC.GameStore.WebApi.csproj", "{16A779C0-637A-4B8D-B0C1-988D0DF1B460}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,10 @@ Global
 		{953931FB-3BD8-48C1-AAA6-E210CD8F726A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{953931FB-3BD8-48C1-AAA6-E210CD8F726A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{953931FB-3BD8-48C1-AAA6-E210CD8F726A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16A779C0-637A-4B8D-B0C1-988D0DF1B460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16A779C0-637A-4B8D-B0C1-988D0DF1B460}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16A779C0-637A-4B8D-B0C1-988D0DF1B460}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16A779C0-637A-4B8D-B0C1-988D0DF1B460}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +105,7 @@ Global
 		{FA8F2AEF-2E34-480F-B33A-FC8BBB9D62C4} = {829539F1-8512-42EA-9E5B-4C0E098453CA}
 		{CBAE555F-6840-428C-AC22-67FDA7FA7405} = {FB0F8760-6AD7-4CAB-8692-1B9AD7CB3723}
 		{953931FB-3BD8-48C1-AAA6-E210CD8F726A} = {E97786EC-0F64-42EE-A622-4B2D13B3662B}
+		{16A779C0-637A-4B8D-B0C1-988D0DF1B460} = {30909FEC-44E6-4C13-954A-79CB4D2037FE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {927C570D-C113-4D93-8685-441D877316CD}

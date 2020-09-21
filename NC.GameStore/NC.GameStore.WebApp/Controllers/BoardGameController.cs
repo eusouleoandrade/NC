@@ -1,34 +1,42 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NC.GameStore.Exception;
-using NC.GameStore.Mapper;
-using NC.GameStore.Service.Interfaces;
 using NC.GameStore.ViewModel;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 
 namespace NC.GameStore.WebApp.Controllers
 {
     public class BoardGameController : Controller
     {
-        private readonly IBoardGameService _boardGameService;
         private readonly ILogger<BoardGameController> _logger;
+        private readonly HttpClient _client;
+        private readonly string urlApi = "http://boardgamestoreapi.azurewebsites.net/api/";
 
-        public BoardGameController(IBoardGameService boardGameService, ILogger<BoardGameController> logger)
+        public BoardGameController(ILogger<BoardGameController> logger)
         {
-            _boardGameService = boardGameService;
             _logger = logger;
+
+            _client = new HttpClient
+            {
+                BaseAddress = new Uri(urlApi),
+            };
+            _client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            return GetViewModelByViewName(nameof(Index));
+            return GetListBoardGameViewModel();
         }
 
         [HttpGet]
         public IActionResult Details(int id)
         {
-            return GetViewModelByViewName(nameof(Details), id);
+            return GetBoardGameViewModelById(id);
         }
 
         [HttpGet]
@@ -41,33 +49,43 @@ namespace NC.GameStore.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(BoardGameViewModel viewModel)
         {
-            return SetViewModelByViewName(nameof(Create), viewModel);
+            if (ModelState.IsValid)
+            {
+                return SetViewModelByActionName(nameof(Create), viewModel);
+            }
+
+            return View(viewModel);
         }
 
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            return GetViewModelByViewName(nameof(Edit), id);
+            return GetBoardGameViewModelById(id);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(BoardGameViewModel viewModel)
         {
-            return SetViewModelByViewName(nameof(Edit), viewModel);
+            if (ModelState.IsValid)
+            {
+                return SetViewModelByActionName(nameof(Edit), viewModel);
+            }
+
+            return View(viewModel);
         }
 
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            return GetViewModelByViewName(nameof(Delete), id);
+            return GetBoardGameViewModelById(id);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(BoardGameViewModel viewModel)
         {
-            return SetViewModelByViewName(nameof(Delete), viewModel);
+            return SetViewModelByActionName(nameof(Delete), viewModel);
         }
 
         private void SendFeedback(bool isError, string message)
@@ -78,80 +96,116 @@ namespace NC.GameStore.WebApp.Controllers
                 TempData["Message"] = message;
         }
 
-        private IActionResult GetViewModelByViewName(string viewName, int? id = null)
+        private IActionResult SendFeedback(HttpResponseMessage response)
         {
-            try
-            {
-                if (viewName.Equals(nameof(Index)))
-                {
-                    return View(_boardGameService.GetAll().Select(s => s.ToBoardGameViewModel()).OrderBy(o => o.Title));
-                }
-                else if ((viewName.Equals(nameof(Details)) || (viewName.Equals(nameof(Delete)) || (viewName.Equals(nameof(Edit))))))
-                {
-                    if (!(id is null))
-                        return View(_boardGameService.Get(id.Value).ToBoardGameViewModel());
-                }
-
-                return View();
-            }
-            catch (AppException ex)
-            {
-                SendFeedback(true, ex.Message);
-                return View();
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError(ex.Message, ex, ex.InnerException);
-                return View();
-            }
+            var feedbackResponse = JsonConvert.DeserializeAnonymousType(response.Content.ReadAsStringAsync().Result, new { Message = "" });
+            SendFeedback(true, feedbackResponse.Message);
+            return View();
         }
 
-        private IActionResult SetViewModelByViewName(string viewName, BoardGameViewModel viewModel)
+        private IActionResult SetViewModelByActionName(string actionName, BoardGameViewModel viewModel)
         {
+            HttpResponseMessage response = null;
+            string messageFeedback = "";
+
             try
             {
-                if (viewName.Equals(nameof(Create)))
+                switch (actionName)
                 {
-                    if (ModelState.IsValid)
-                    {
-                        _boardGameService.Create(viewModel.ToEntity());
-                        SendFeedback(false, $"BoardGame { viewModel.Title?.ToUpper()} successfully created.");
-                        return RedirectToAction(nameof(Index));
-                    }
+                    case nameof(Delete):
+                        response = _client.DeleteAsync($"boardgame/{viewModel.Id}").Result;
+                        messageFeedback = $"BoardGame {viewModel.Title?.ToUpper()} successfully deleted.";
+                        break;
 
-                    return View(viewModel);
-                }
-                else if (viewName.Equals(nameof(Edit)))
-                {
-                    if (ModelState.IsValid)
-                    {
-                        _boardGameService.Edit(viewModel.ToEntity());
-                        SendFeedback(false, $"BoardGame {viewModel.Title?.ToUpper()} successfully edited.");
-                        return RedirectToAction(nameof(Index));
-                    }
+                    case nameof(Create):
+                        var contentCreate = new StringContent(JsonConvert.SerializeObject(viewModel), Encoding.UTF8, "application/json");
+                        response = _client.PostAsync("boardgame", contentCreate).Result;
+                        messageFeedback = $"BoardGame { viewModel.Title?.ToUpper()} successfully created.";
+                        break;
 
-                    return View(viewModel);
+                    case nameof(Edit):
+                        var contentEdit = new StringContent(JsonConvert.SerializeObject(viewModel), Encoding.UTF8, "application/json");
+                        response = _client.PutAsync($"boardgame", contentEdit).Result;
+                        messageFeedback = $"BoardGame {viewModel.Title?.ToUpper()} successfully edited.";
+                        break;
                 }
-                else if (viewName.Equals(nameof(Delete)))
+
+                if (response.IsSuccessStatusCode)
                 {
-                    _boardGameService.Delete(_boardGameService.Get(viewModel.Id));
-                    SendFeedback(false, $"BoardGame {viewModel.Title?.ToUpper()} successfully deleted.");
+                    SendFeedback(false, messageFeedback);
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    return View();
+                    return SendFeedback(response);
                 }
-            }
-            catch (AppException ex)
-            {
-                SendFeedback(true, ex.Message);
-                return View();
             }
             catch (System.Exception ex)
             {
                 _logger.LogError(ex.Message, ex, ex.InnerException);
-                return View();
+                return SendFeedback(response);
+            }
+            finally
+            {
+                _client.Dispose();
+            }
+        }
+
+        private IActionResult GetBoardGameViewModelById(int id)
+        {
+            HttpResponseMessage response = null;
+
+            try
+            {
+                response = _client.GetAsync($"boardgame/{id}").Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var viewModel = JsonConvert.DeserializeObject<BoardGameViewModel>(response.Content.ReadAsStringAsync().Result);
+                    return View(viewModel);
+                }
+                else
+                {
+                    return SendFeedback(response);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex.Message, ex, ex.InnerException);
+                return SendFeedback(response);
+            }
+            finally
+            {
+                _client.Dispose();
+            }
+        }
+
+        private IActionResult GetListBoardGameViewModel()
+        {
+            HttpResponseMessage response = null;
+
+            try
+            {
+                response = _client.GetAsync($"boardgame").Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var viewModel = JsonConvert.DeserializeObject<IEnumerable<BoardGameViewModel>>(response.Content.ReadAsStringAsync().Result);
+                    return View(viewModel.OrderBy(o => o.Title));
+                }
+                else
+                {
+                    return SendFeedback(response);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex.Message, ex, ex.InnerException);
+                return SendFeedback(response);
+            }
+            finally
+            {
+                _client.Dispose();
             }
         }
     }
